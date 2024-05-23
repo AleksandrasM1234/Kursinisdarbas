@@ -1,19 +1,27 @@
 Viešbučio valdymo sistema
+
 Įvadas
+
 Ši programa yra viešbučio valdymo sistema, parašyta naudojant Python. Ji naudoja keturis objektinio programavimo principus (enkapsuliacija, paveldėjimas, polimorfizmas, abstrakcija) ir du dizaino šablonus (Singleton ir Factory Method). Ši sistema leidžia pridėti kambarius, valdyti jų užimtumą, pateikti svečių prašymus ir teikti viešbučio paslaugas. Programa skirta būti paleista ir naudojama tiek per konsolę, tiek per Google Colab.
 
 Kaip paleisti programą
+
 Atsisiųskite Python ir įdiekite jį, jei dar neturite.
 Klonuokite GitHub repozitoriją į savo vietinį kompiuterį.
 Paleiskite programą per konsolę ar Python interpretuotuvą.
 Naudokite programą pagal pateiktus pavyzdžius.
+
 Kaip naudoti programą
+
 Pridėti kambarius: Naudokite add_room metodą pridėti naujus kambarius.
 Peržiūrėti kambarių sąrašą: Naudokite list_rooms metodą peržiūrėti visų kambarių sąrašą.
 Užregistruoti svečią į kambarį: Naudokite check_in_room metodą užregistruoti svečią į kambarį.
 Išregistruoti svečią iš kambario: Naudokite check_out_room metodą išregistruoti svečią iš kambario.
+
 Kodo analizė
+
 Naudojami principai
+
 Enkapsuliacija (Encapsulation):
 
 Enkapsuliacija leidžia paslėpti objekto vidinę būseną ir užtikrinti, kad prie jos galima būtų prieiti tik per viešus metodus.
