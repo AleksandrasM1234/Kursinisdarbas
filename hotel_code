@@ -1,0 +1,160 @@
+# Import necessary modules
+from abc import ABC, abstractmethod
+import unittest
+
+class Room:
+    def __init__(self, room_number, room_type):
+        self.__room_number = room_number
+        self.__room_type = room_type
+        self.__is_occupied = False
+
+    def check_in(self):
+        if not self.__is_occupied:
+            self.__is_occupied = True
+        else:
+            raise Exception("Room is already occupied")
+
+    def check_out(self):
+        if self.__is_occupied:
+            self.__is_occupied = False
+        else:
+            raise Exception("Room is already vacant")
+
+    def is_occupied(self):
+        return self.__is_occupied
+
+    def get_room_number(self):
+        return self.__room_number
+
+    def get_room_type(self):
+        return self.__room_type
+
+class Suite(Room):
+    def __init__(self, room_number):
+        super().__init__(room_number, 'Suite')
+
+    def provide_extra_services(self):
+        return "Extra services provided"
+
+class Guest:
+    def __init__(self, name):
+        self.name = name
+
+    def request_service(self):
+        return f"Service requested by {self.name}"
+
+class VIPGuest(Guest):
+    def request_service(self):
+        return f"VIP service requested by {self.name}"
+
+class HotelService(ABC):
+    @abstractmethod
+    def provide_service(self):
+        pass
+
+class RoomService(HotelService):
+    def provide_service(self):
+        return "Room service provided"
+
+class HotelManager:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(HotelManager, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self):
+        if not hasattr(self, 'rooms'):
+            self.rooms = []
+
+    def add_room(self, room):
+        self.rooms.append(room)
+
+    def get_rooms(self):
+        return self.rooms
+
+class RoomFactory:
+    @staticmethod
+    def create_room(room_type, room_number):
+        if room_type == "Suite":
+            return Suite(room_number)
+        else:
+            return Room(room_number, room_type)
+
+class HotelData:
+    def __init__(self):
+        self.manager = HotelManager()
+
+    def add_room(self, room_type, room_number):
+        room = RoomFactory.create_room(room_type, room_number)
+        self.manager.add_room(room)
+
+    def list_rooms(self):
+        for room in self.manager.get_rooms():
+            print(f"Room Number: {room.get_room_number()}, Room Type: {room.get_room_type()}, Is Occupied: {room.is_occupied()}")
+
+    def check_in_room(self, room_number):
+        for room in self.manager.get_rooms():
+            if room.get_room_number() == room_number:
+                room.check_in()
+                print(f"Room {room_number} checked in.")
+                return
+        print(f"Room {room_number} not found.")
+
+    def check_out_room(self, room_number):
+        for room in self.manager.get_rooms():
+            if room.get_room_number() == room_number:
+                room.check_out()
+                print(f"Room {room_number} checked out.")
+                return
+        print(f"Room {room_number} not found.")
+
+hotel_data = HotelData()
+hotel_data.add_room("Standard", 101)
+hotel_data.add_room("Suite", 102)
+hotel_data.add_room("Standard", 103)
+hotel_data.add_room("Standard", 104)
+hotel_data.add_room("Suite", 201)
+hotel_data.add_room("Standard", 202)
+hotel_data.add_room("Suite", 203)
+hotel_data.add_room("Standard", 204)
+
+print("List of all rooms after adding:")
+hotel_data.list_rooms()
+
+print("\nChecking into rooms 101 and 201:")
+hotel_data.check_in_room(101)
+hotel_data.check_in_room(201)
+
+print("\nList of all rooms after check-in:")
+hotel_data.list_rooms()
+
+print("\nChecking out of room 101:")
+hotel_data.check_out_room(101)
+
+print("\nFinal list of all rooms:")
+hotel_data.list_rooms()
+
+class TestHotelManagement(unittest.TestCase):
+    def test_room_check_in(self):
+        room = Room(101, 'Standard')
+        room.check_in()
+        self.assertTrue(room.is_occupied())
+
+    def test_room_check_out(self):
+        room = Room(101, 'Standard')
+        room.check_in()
+        room.check_out()
+        self.assertFalse(room.is_occupied())
+
+    def test_singleton(self):
+        manager1 = HotelManager()
+        manager2 = HotelManager()
+        self.assertIs(manager1, manager2)
+
+def run_tests():
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestHotelManagement)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+run_tests()
